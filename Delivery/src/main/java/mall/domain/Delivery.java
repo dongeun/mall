@@ -60,10 +60,9 @@ public class Delivery  {
 
     @PostPersist
     public void onPostPersist(){
-
-
-        DeliveryStarted deliveryStarted = new DeliveryStarted(this);
-        deliveryStarted.publishAfterCommit();
+        // publish 중복으로 주석 처리(deliveryStarted내부에서 처리)
+        // DeliveryStarted deliveryStarted = new DeliveryStarted(this);
+        // deliveryStarted.publishAfterCommit();
 
     }
     @PostUpdate
@@ -73,12 +72,9 @@ public class Delivery  {
         DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
         deliveryCompleted.publishAfterCommit();
 
-
-
-        DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
-        deliveryCanceled.publishAfterCommit();
-
-
+        // publish 중복으로 주석 처리(deliveryCanceled 내부에서 처리)
+        // DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
+        // deliveryCanceled.publishAfterCommit();
 
         DeliveryReturned deliveryReturned = new DeliveryReturned(this);
         deliveryReturned.publishAfterCommit();
@@ -93,18 +89,21 @@ public class Delivery  {
         return deliveryRepository;
     }
 
-
-
-
+    // 배송 시작 이벤트
     public static void deliveryStart(OrderPlaced orderPlaced){
 
-        /** Example 1:  new item 
+        /** Example 1:  new item  */
         Delivery delivery = new Delivery();
+        delivery.setOrderId(orderPlaced.getId());
+        delivery.setProductId(orderPlaced.getProductId());
+        delivery.setProductName(orderPlaced.getProductName());
+        delivery.setQty(orderPlaced.getQty());
+
+        delivery.setStatus("DeliveryStarted");
         repository().save(delivery);
 
         DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
         deliveryStarted.publishAfterCommit();
-        */
 
         /** Example 2:  finding and process
         
@@ -117,10 +116,12 @@ public class Delivery  {
             deliveryStarted.publishAfterCommit();
 
          });
-        */
+       
 
-        
+        */
     }
+
+    // 배송 취소 이벤트
     public static void deliveryCancel(OrderCanceled orderCanceled){
 
         /** Example 1:  new item 
@@ -131,18 +132,18 @@ public class Delivery  {
         deliveryCanceled.publishAfterCommit();
         */
 
-        /** Example 2:  finding and process
+        /** Example 2:  finding and process */
         
-        repository().findById(orderCanceled.get???()).ifPresent(delivery->{
+        repository().findByOrderId(orderCanceled.getId()).ifPresent(delivery->{
             
-            delivery // do something
+            delivery.setStatus("DeliveryCanceled");
             repository().save(delivery);
 
             DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
             deliveryCanceled.publishAfterCommit();
 
          });
-        */
+        
 
         
     }

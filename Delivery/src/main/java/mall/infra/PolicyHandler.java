@@ -28,14 +28,8 @@ public class PolicyHandler{
         OrderPlaced event = orderPlaced;
         System.out.println("\n\n##### listener DeliveryStart : " + orderPlaced + "\n\n");
 
-
-        
-
         // Sample Logic //
         Delivery.deliveryStart(event);
-        
-
-        
 
     }
 

@@ -19,41 +19,11 @@ public class Order  {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    
-    
-    
-    
-    
     private Long id;
-    
-    
-    
-    
-    
     private String status;
-    
-    
-    
-    
-    
     private String productName;
-    
-    
-    
-    
-    
     private Integer qty;
-    
-    
-    
-    
-    
     private Long productId;
-    
-    
-    
-    
-    
     private Long customerId;
 
     @PostPersist
