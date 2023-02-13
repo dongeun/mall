@@ -16,46 +16,14 @@ import java.util.Date;
 @Data
 
 public class Delivery  {
-
-
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    
-    
-    
-    
-    
     private Long id;
-    
-    
-    
-    
-    
     private Long orderId;
-    
-    
-    
-    
-    
     private Long productId;
-    
-    
-    
-    
-    
     private Integer qty;
-    
-    
-    
-    
-    
     private String productName;
-    
-    
-    
-    
-    
     private String status;
 
     @PostPersist
@@ -67,17 +35,17 @@ public class Delivery  {
     }
     @PostUpdate
     public void onPostUpdate(){
+        // 추후 status에 따라 실행구문 분기 처리(Completed, Canceled, Returned)
 
-
-        DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
-        deliveryCompleted.publishAfterCommit();
+        // DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
+        // deliveryCompleted.publishAfterCommit();
 
         // publish 중복으로 주석 처리(deliveryCanceled 내부에서 처리)
-        // DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
-        // deliveryCanceled.publishAfterCommit();
+        DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
+        deliveryCanceled.publishAfterCommit();
 
-        DeliveryReturned deliveryReturned = new DeliveryReturned(this);
-        deliveryReturned.publishAfterCommit();
+        // DeliveryReturned deliveryReturned = new DeliveryReturned(this);
+        // deliveryReturned.publishAfterCommit();
 
     }
     @PreUpdate
@@ -139,12 +107,10 @@ public class Delivery  {
             delivery.setStatus("DeliveryCanceled");
             repository().save(delivery);
 
-            DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
-            deliveryCanceled.publishAfterCommit();
+            // DeliveryCanceled deliveryCanceled = new DeliveryCanceled(delivery);
+            // deliveryCanceled.publishAfterCommit();
 
          });
-        
-
         
     }
 
